@@ -2,7 +2,6 @@ use hyper::Client as HyperClient;
 use hyper::Method as HyperMethod;
 use hyper::Request as HyperRequest;
 use hyper_tls::HttpsConnector;
-use http::header::AUTHORIZATION;
 use url::Url;
 use base64;
 use futures::{self, Future, Stream};
@@ -70,8 +69,8 @@ impl Hurl for HyperHurl {
 
         // if request need to be authorized
         if let Some(auth) = req.auth {
-            let auth = base64::encode(&format!("{}:{}", auth.username, auth.password));
-            query.header(AUTHORIZATION, auth);
+            url.query_pairs_mut().append_pair("u", auth.username)
+            url.query_pairs_mut().append_pair("p", auth.username)
         }
 
         let request = if let Some(body) = req.body {
