@@ -4,6 +4,7 @@ extern crate futures;
 extern crate http;
 extern crate base64;
 extern crate hyper;
+extern crate hyper_tls;
 extern crate url;
 
 pub mod client;

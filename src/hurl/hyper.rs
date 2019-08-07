@@ -1,10 +1,12 @@
 use hyper::Client as HyperClient;
 use hyper::Method as HyperMethod;
 use hyper::Request as HyperRequest;
+use hyper_tls::HttpsConnector;
 use http::header::AUTHORIZATION;
 use url::Url;
 use base64;
 use futures::{self, Future, Stream};
+use std::sync::Arc;
 
 use super::{Request, Response, Method, HurlResult};
 
@@ -21,7 +23,8 @@ impl HyperHurl {
 
 impl Hurl for HyperHurl {
     fn request(&self, req: Request) -> HurlResult {
-        let client = HyperClient::default();
+        let https = HttpsConnector::new(4).unwrap();
+        let client = HyperClient::builder().build::<_, hyper::Body>(https);
 
         // map request method to the hyper's
         let method = match req.method {
